@@ -1,5 +1,9 @@
 export interface GameObject {
-  gameid: string, playerA: { name: string, played: string }, playerB: { name: string, played: string }, t: number, type: string
+  gameid: string, 
+  playerA: { name: string, played: string }, 
+  playerB: { name: string, played: string }, 
+  t: number, 
+  type: string
 }
 
 export interface FetchObject {
@@ -8,9 +12,17 @@ export interface FetchObject {
 }
 
 export interface PlayerProfile {
-  games: GameObject[],
+  games: Array<GameObject>,
+  wins: number,
+  losses: number,
   winRatio: number,
   totalMatches: number
-  pickRate: { rock: number, paper: number, scissors: number }
+  pickRate: PickRate
   mostPicked: string
+}
+
+interface PickRate {
+  rock: number,
+  paper: number,
+  scissors: number
 }

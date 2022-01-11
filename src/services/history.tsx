@@ -1,7 +1,7 @@
 import { FetchObject, GameObject } from "../types"
 import axios from 'axios'
 
-const fetchMatchHistory = async (cursorUrl: string): Promise<FetchObject> => {
+export const fetchMatchHistory = async (cursorUrl: string): Promise<FetchObject> => {
   const response = await axios.get(cursorUrl)
 
   const cursor: string = response.data.cursor
@@ -9,5 +9,3 @@ const fetchMatchHistory = async (cursorUrl: string): Promise<FetchObject> => {
 
   return { cursor, data }
 }
-
-export default fetchMatchHistory
