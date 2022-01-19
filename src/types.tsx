@@ -26,3 +26,5 @@ interface PickRate {
   paper: number,
   scissors: number
 }
+
+export type RunningGame = Omit<GameObject, "t">;
