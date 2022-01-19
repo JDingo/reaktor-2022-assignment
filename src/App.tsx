@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GameObject, PlayerProfile } from './types'
 import { fetchMatchHistory } from './services/history';
-import { handleHistoryPage } from './services/players';
+import { combinePlayerMaps, handleHistoryPage } from './services/players';
 
 const App = () => {
   const [gameList, setGameList] = useState<Array<GameObject>>([])
@@ -17,10 +17,9 @@ const App = () => {
       setpageNumber(pageNumber + 1)
       console.log(pageNumber, cursor, gameList)
 
-      setPlayerMap(handleHistoryPage(playerMap, data))
-      console.log(playerMap)
+      setPlayerMap(combinePlayerMaps(playerMap, handleHistoryPage(data)))
 
-      if (cursor && pageNumber < 20) { // Capped for testing
+      if (cursor && pageNumber < 10) { // Capped for testing
         setCursor(cursor)
       }
     })

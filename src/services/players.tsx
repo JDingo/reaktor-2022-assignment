@@ -16,7 +16,9 @@ const createPlayerProfile = (): PlayerProfile => {
   }
 }
 
-export const handleHistoryPage = (playerMap: Map<string, PlayerProfile>, data: Array<GameObject>) => {
+export const handleHistoryPage = (data: Array<GameObject>): Map<string, PlayerProfile> => {
+  const playerMap: Map<string, PlayerProfile> = new Map();
+
   data.forEach(game => {
     const gamePlayerA = game.playerA
     const gamePlayerB = game.playerB
@@ -34,10 +36,10 @@ export const handleHistoryPage = (playerMap: Map<string, PlayerProfile>, data: A
     const playerAPick = gamePlayerA.played.toLowerCase()
     const playerBPick = gamePlayerB.played.toLowerCase()
 
-    if (playerAPick == ('scissors' || 'paper' || 'rock')) {
+    if (playerAPick == 'scissors' || playerAPick == 'paper' || playerAPick == 'rock') {
       mapPlayerA.pickRate[playerAPick] += 1
     }
-    if (playerBPick == ('scissors' || 'paper' || 'rock')) {
+    if (playerBPick == 'scissors' || playerBPick == 'paper' || playerBPick == 'rock') {
       mapPlayerB.pickRate[playerBPick] += 1
     }
 
@@ -69,11 +71,39 @@ export const handleHistoryPage = (playerMap: Map<string, PlayerProfile>, data: A
 
     playerMap.set(gamePlayerA.name, mapPlayerA)
     playerMap.set(gamePlayerB.name, mapPlayerB)
-
-    return playerMap
   })
 
   return playerMap
 }
 
-export default { createPlayerProfile, handleHistoryPage }
+export const combinePlayerMaps = (destinationMap: Map<string, PlayerProfile>, addedMap: Map<string, PlayerProfile>): Map<string, PlayerProfile> => {
+  addedMap.forEach((value, key) => {
+    if (destinationMap.has(key)) {
+      const player: PlayerProfile = destinationMap.get(key) as PlayerProfile
+
+      player.games = [...player.games, ...value.games]
+      player.wins = player.wins + value.wins
+      player.losses = player.losses + value.losses
+
+      player.winRatio = player.wins / player.losses
+      player.totalMatches = player.games.length
+
+      let mostPicked = 0
+      let pick: keyof typeof player.pickRate
+      for (pick in player.pickRate) {
+        if (player.pickRate[pick] > mostPicked) {
+          mostPicked = player.pickRate[pick]
+          player.mostPicked = pick
+        }
+      }
+    }
+
+    else {
+      destinationMap.set(key, value)
+    }
+  })
+
+  return destinationMap
+}
+
+export default { createPlayerProfile, handleHistoryPage, combinePlayerMaps }
