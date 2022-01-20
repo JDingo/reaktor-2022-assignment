@@ -37,7 +37,7 @@ const App = () => {
     const socket = new WebSocket("wss://bad-api-assignment.reaktor.com/rps/live");
 
     socket.onopen = () => {
-      console.log("Connected WebSocket!");
+      console.log("Connected to WebSocket!");
     };
     
     socket.onmessage = (event: MessageEvent<string>) => {
@@ -53,7 +53,7 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <div className='container'>
       <div>
         <h1>Rock-Paper-Scissors Application</h1>
       </div>
