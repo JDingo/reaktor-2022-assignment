@@ -56,9 +56,9 @@ export const handleHistoryPage = (data: Array<GameObject>): Map<string, PlayerPr
     const playerList = [mapPlayerA, mapPlayerB];
     playerList.forEach(player => {
       player.games.push(game);
-      player.winRatio = player.wins / player.losses;
       player.totalMatches = player.games.length;
-
+      player.winRatio = player.wins / player.totalMatches;
+      
       let mostPicked = 0;
       let pick: keyof typeof player.pickRate;
       for (pick in player.pickRate) {
@@ -85,8 +85,8 @@ export const combinePlayerMaps = (destinationMap: Map<string, PlayerProfile>, ad
       player.wins = player.wins + value.wins;
       player.losses = player.losses + value.losses;
 
-      player.winRatio = player.wins / player.losses;
       player.totalMatches = player.games.length;
+      player.winRatio = player.wins / player.totalMatches;
 
       let mostPicked = 0;
       let pick: keyof typeof player.pickRate;

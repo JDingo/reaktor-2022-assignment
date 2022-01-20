@@ -7,7 +7,7 @@ const PlayerCard = ({ name, playerProfile }: { name: string, playerProfile: Play
       {name} <br />
       Games: Togglable list
       <ul>
-        <li> Winrate: {playerProfile.winRatio} </li>
+        <li> Winrate: {Math.round(playerProfile.winRatio * 100)} % </li>
         <li> Total Games: {playerProfile.totalMatches} </li>
         <li> Most Picked: {playerProfile.mostPicked} </li>
       </ul>
