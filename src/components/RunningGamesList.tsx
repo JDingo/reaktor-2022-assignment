@@ -10,9 +10,9 @@ const RunningGamesList = ({ runningGames }: { runningGames: Array<RunningGame>})
       <Table striped>
         <tbody>
           {runningGames.map(game => (
-            <tr key={game.gameid}>
+            <tr key={game.gameId}>
               <td>
-                <RunningGameCard key={game.gameid} playerA={game.playerA.name} playerB={game.playerB.name} />
+                <RunningGameCard playerA={game.playerA.name} playerB={game.playerB.name} />
               </td>
             </tr>
           ))

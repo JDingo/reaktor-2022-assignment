@@ -1,5 +1,5 @@
 export interface GameObject {
-  gameid: string, 
+  gameId: string, 
   playerA: { name: string, played: string }, 
   playerB: { name: string, played: string }, 
   t: number, 
@@ -28,7 +28,7 @@ interface PickRate {
 }
 
 export interface RunningGame {
-  gameid: string, 
+  gameId: string, 
   playerA: { name: string }, 
   playerB: { name: string }, 
   t: number, 

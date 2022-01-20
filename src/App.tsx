@@ -18,16 +18,14 @@ const App = () => {
       const { cursor, data } = fetchObject;
       setGameList(gameList.concat(data));
       setpageNumber(pageNumber + 1);
-      // console.log(pageNumber, cursor, gameList);
 
       setPlayerMap(combinePlayerMaps(playerMap, handleHistoryPage(data)));
-      // console.log(playerMap);
 
-      if (cursor && pageNumber < 10) { // Capped for testing
+      if (cursor && pageNumber < 50) { // Capped for testing
         setCursor(cursor);
       }
     }).catch(() => {
-      console.log("Error fetching data");
+      console.log("Error fetching data!");
     });
   }, [cursor]);
 
@@ -37,21 +35,23 @@ const App = () => {
     socket.onopen = () => {
       console.log("Connected to WebSocket!");
     };
-    
+
     socket.onmessage = (event: MessageEvent<string>) => {
       const receivedData = event.data;
       let parsedData = receivedData.replaceAll("\\", "");
       parsedData = parsedData.substring(1, parsedData.length - 1);
       const game: unknown = JSON.parse(parsedData);
-      
-      console.log(isGameBegin(game));
+      console.log(game);
+
       if (isGameBegin(game)) {
         console.log("New Game!");
         setRunningGames(runningGames => [...runningGames, game]);
       }
 
       if (isGameResult(game)) {
-        console.log("Päättyi");
+        setRunningGames(runningGames => runningGames.filter(runningGame => { runningGame.gameId !== game.gameId; }));
+        console.log("Game ended!");
+        setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleHistoryPage([game])));
       }
     };
   }, []);
@@ -61,8 +61,14 @@ const App = () => {
       <div>
         <h1>Rock-Paper-Scissors Application</h1>
       </div>
-      <PlayerList playerMap={playerMap} />
-      <RunningGamesList runningGames={runningGames} />
+      <div>
+        <h2>Player Info</h2>
+        <PlayerList playerMap={playerMap} />
+      </div>
+      <div>
+        <h2>Ongoing Games</h2>
+        <RunningGamesList runningGames={runningGames} />
+      </div>
     </div>
   );
 };
