@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { GameObject, PlayerProfile, RunningGame } from './types';
+import { GameObject, isGameBegin, isGameResult, PlayerProfile, RunningGame } from './types';
 import { fetchMatchHistory } from './services/history';
 import { combinePlayerMaps, handleHistoryPage } from './services/players';
 import PlayerList from './components/PlayerList';
-
-const isReceivedGame = (object: any): object is GameObject | RunningGame => {
-  return "gameid" in object && "playerA" in object && "playerB" in object && "t" in object && "type" in object;
-};
+import RunningGamesList from './components/RunningGamesList';
 
 const App = () => {
   const [gameList, setGameList] = useState<Array<GameObject>>([]);
@@ -14,6 +11,7 @@ const App = () => {
   const [pageNumber, setpageNumber] = useState<number>(0);
 
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
+  const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
 
   useEffect(() => {
     fetchMatchHistory(cursor).then(fetchObject => {
@@ -44,10 +42,16 @@ const App = () => {
       const receivedData = event.data;
       let parsedData = receivedData.replaceAll("\\", "");
       parsedData = parsedData.substring(1, parsedData.length - 1);
-      console.log(JSON.parse(parsedData));
+      const game: unknown = JSON.parse(parsedData);
       
-      if (isReceivedGame(JSON.parse(parsedData))) {
-        console.log(JSON.parse(parsedData));
+      console.log(isGameBegin(game));
+      if (isGameBegin(game)) {
+        console.log("New Game!");
+        setRunningGames(runningGames => [...runningGames, game]);
+      }
+
+      if (isGameResult(game)) {
+        console.log("Päättyi");
       }
     };
   }, []);
@@ -58,6 +62,7 @@ const App = () => {
         <h1>Rock-Paper-Scissors Application</h1>
       </div>
       <PlayerList playerMap={playerMap} />
+      <RunningGamesList runningGames={runningGames} />
     </div>
   );
 };

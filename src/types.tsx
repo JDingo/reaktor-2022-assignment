@@ -27,4 +27,18 @@ interface PickRate {
   scissors: number
 }
 
-export type RunningGame = Omit<GameObject, "t">;
+export interface RunningGame {
+  gameid: string, 
+  playerA: { name: string }, 
+  playerB: { name: string }, 
+  t: number, 
+  type: string
+}
+
+export const isGameResult = (object: any): object is GameObject => {
+  return object.type === "GAME_RESULT";
+};
+
+export const isGameBegin = (object: any): object is RunningGame => {
+  return object.type === "GAME_BEGIN";
+};
