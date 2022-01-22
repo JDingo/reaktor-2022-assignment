@@ -34,7 +34,6 @@ const App = () => {
   }, [cursor]);
 
   useEffect(() => {
-    console.log(search);
     const socket = new WebSocket("wss://bad-api-assignment.reaktor.com/rps/live");
 
     socket.onopen = () => {
