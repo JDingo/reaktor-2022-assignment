@@ -80,7 +80,6 @@ export const combinePlayerMaps = (destinationMap: Map<string, PlayerProfile>, ad
   addedMap.forEach((value, key) => {
     if (destinationMap.has(key)) {
       const player: PlayerProfile = destinationMap.get(key) as PlayerProfile;
-
       player.games = [...player.games, ...value.games];
       player.wins = player.wins + value.wins;
       player.losses = player.losses + value.losses;

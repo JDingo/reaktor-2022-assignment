@@ -13,6 +13,8 @@ const App = () => {
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
   const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
 
+  const [latestData, setLatestData] = useState<unknown>({});
+
   useEffect(() => {
     fetchMatchHistory(cursor).then(fetchObject => {
       const { cursor, data } = fetchObject;
@@ -41,20 +43,25 @@ const App = () => {
       let parsedData = receivedData.replaceAll("\\", "");
       parsedData = parsedData.substring(1, parsedData.length - 1);
       const game: unknown = JSON.parse(parsedData);
-      console.log(game);
-
-      if (isGameBegin(game)) {
-        console.log("New Game!");
-        setRunningGames(runningGames => [...runningGames, game]);
-      }
-
-      if (isGameResult(game)) {
-        setRunningGames(runningGames => runningGames.filter(runningGame => { runningGame.gameId !== game.gameId; }));
-        console.log("Game ended!");
-        setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleHistoryPage([game])));
-      }
+      setLatestData(game);
     };
   }, []);
+
+  useEffect(() => {
+    if (isGameBegin(latestData)) {
+      console.log("New Game!");
+      setRunningGames(runningGames => [...runningGames, latestData]);
+    }
+
+    else if (isGameResult(latestData)) {
+      setRunningGames(runningGames => runningGames.filter(runningGame => runningGame.gameId !== latestData.gameId ));
+      console.log(playerMap.get(latestData.playerA.name));
+      console.log(playerMap.get(latestData.playerB.name));
+      setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleHistoryPage([latestData])));
+      console.log(playerMap.get(latestData.playerA.name));
+      console.log(playerMap.get(latestData.playerB.name));
+    }
+  }, [latestData]);
 
   return (
     <div className='container'>
