@@ -4,6 +4,7 @@ import { fetchMatchHistory } from './services/history';
 import { combinePlayerMaps, handleHistoryPage } from './services/players';
 import PlayerList from './components/PlayerList';
 import RunningGamesList from './components/RunningGamesList';
+import SearchBar from './components/SearchBar';
 
 const App = () => {
   const [gameList, setGameList] = useState<Array<GameObject>>([]);
@@ -12,8 +13,9 @@ const App = () => {
 
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
   const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
-
   const [latestData, setLatestData] = useState<unknown>({});
+
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     fetchMatchHistory(cursor).then(fetchObject => {
@@ -32,6 +34,7 @@ const App = () => {
   }, [cursor]);
 
   useEffect(() => {
+    console.log(search);
     const socket = new WebSocket("wss://bad-api-assignment.reaktor.com/rps/live");
 
     socket.onopen = () => {
@@ -49,17 +52,12 @@ const App = () => {
 
   useEffect(() => {
     if (isGameBegin(latestData)) {
-      console.log("New Game!");
       setRunningGames(runningGames => [...runningGames, latestData]);
     }
 
     else if (isGameResult(latestData)) {
-      setRunningGames(runningGames => runningGames.filter(runningGame => runningGame.gameId !== latestData.gameId ));
-      console.log(playerMap.get(latestData.playerA.name));
-      console.log(playerMap.get(latestData.playerB.name));
+      setRunningGames(runningGames => runningGames.filter(runningGame => runningGame.gameId !== latestData.gameId));
       setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleHistoryPage([latestData])));
-      console.log(playerMap.get(latestData.playerA.name));
-      console.log(playerMap.get(latestData.playerB.name));
     }
   }, [latestData]);
 
@@ -70,7 +68,8 @@ const App = () => {
       </div>
       <div>
         <h2>Player Info</h2>
-        <PlayerList playerMap={playerMap} />
+        <SearchBar setSearch={setSearch} />
+        <PlayerList playerMap={playerMap} search={search} />
       </div>
       <div>
         <h2>Ongoing Games</h2>

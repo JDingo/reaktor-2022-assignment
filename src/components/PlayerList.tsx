@@ -4,8 +4,11 @@ import PlayerCard from "./PlayerCard";
 import { Table } from 'react-bootstrap';
 import './PlayerList.css';
 
-const PlayerList = ({ playerMap }: { playerMap: Map<string, PlayerProfile> }) => {
-  const playerArray = Array.from(playerMap);
+const PlayerList = ({ playerMap, search }: { playerMap: Map<string, PlayerProfile>, search: string }) => {
+  const rawArray = Array.from(playerMap);
+  const playerArray = search === '' ? rawArray : rawArray.filter(player => 
+    player[0].substring(0, search.length).toLowerCase().includes(search.toLowerCase())
+    );
 
   return (
     <div className="vertical_scroll">
