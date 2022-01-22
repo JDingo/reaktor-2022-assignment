@@ -5,6 +5,7 @@ import { combinePlayerMaps, handleHistoryPage } from './services/players';
 import PlayerList from './components/PlayerList';
 import RunningGamesList from './components/RunningGamesList';
 import SearchBar from './components/SearchBar';
+import FinishedGamesList from './components/FinishedGamesList';
 
 const App = () => {
   const [gameList, setGameList] = useState<Array<GameObject>>([]);
@@ -13,6 +14,7 @@ const App = () => {
 
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
   const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
+  const [finishedGames, setFinishedGames]= useState<Array<GameObject>>([]);
   const [latestData, setLatestData] = useState<unknown>({});
 
   const [search, setSearch] = useState<string>('');
@@ -56,6 +58,7 @@ const App = () => {
 
     else if (isGameResult(latestData)) {
       setRunningGames(runningGames => runningGames.filter(runningGame => runningGame.gameId !== latestData.gameId));
+      setFinishedGames(finishedGames => [...finishedGames, latestData]);
       setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleHistoryPage([latestData])));
     }
   }, [latestData]);
@@ -73,6 +76,10 @@ const App = () => {
       <div>
         <h2>Ongoing Games</h2>
         <RunningGamesList runningGames={runningGames} />
+      </div>
+      <div>
+        <h2>Finished Games</h2>
+        <FinishedGamesList finishedGames={finishedGames} />
       </div>
     </div>
   );
