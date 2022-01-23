@@ -9,7 +9,7 @@ import SearchBar from './components/SearchBar';
 import FinishedGamesList from './components/FinishedGamesList';
 
 const App = () => {
-  const [cursor, setCursor] = useState<string>('/rps/history');
+  const [cursor, setCursor] = useState<string>(`${process.env.API}/rps/history'`);
 
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
   const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
@@ -37,7 +37,7 @@ const App = () => {
       });
 
       if (cursor) {
-        setCursor(cursor);
+        setCursor(process.env.API + cursor);
       }
     }).catch(() => {
       console.log("Error fetching data!");
