@@ -9,7 +9,7 @@ import SearchBar from './components/SearchBar';
 import FinishedGamesList from './components/FinishedGamesList';
 
 const App = () => {
-  const [cursor, setCursor] = useState<string>(`${process.env.API}/rps/history'`);
+  const [cursor, setCursor] = useState<string>(`${process.env.REACT_APP_API_URL}/rps/history'`);
 
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
   const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
@@ -24,20 +24,8 @@ const App = () => {
 
       setPlayerMap(combinePlayerMaps(playerMap, handleMatchPage(data)));
 
-      playerMap.forEach((value) => {
-        const duplicateId: Array<string> = [];
-        value.games.forEach(game => {
-          if (game.gameId in duplicateId) {
-            console.log("Dup");
-            console.log(duplicateId.length, value.games.length);
-          } else {
-            duplicateId.push(game.gameId);
-          }
-        });
-      });
-
       if (cursor) {
-        setCursor(process.env.API + cursor);
+        setCursor(process.env.REACT_APP_API_URL + cursor);
       }
     }).catch(() => {
       console.log("Error fetching data!");

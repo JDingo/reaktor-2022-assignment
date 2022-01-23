@@ -40,9 +40,6 @@ const GameList = ({ games, name }: { games: Array<GameObject>, name: string }) =
     }
   });
 
-  console.log(duplicateGames);
-  console.log(games);
-
   return (
     <div className="vertical_scroll">
       <Table striped>
