@@ -16,7 +16,7 @@ const createPlayerProfile = (): PlayerProfile => {
   };
 };
 
-export const handleHistoryPage = (data: Array<GameObject>): Map<string, PlayerProfile> => {
+export const handleMatchPage = (data: Array<GameObject>): Map<string, PlayerProfile> => {
   const playerMap: Map<string, PlayerProfile> = new Map();
 
   data.forEach(game => {
@@ -44,7 +44,7 @@ export const handleHistoryPage = (data: Array<GameObject>): Map<string, PlayerPr
     }
 
     if (!(gamePlayerA == gamePlayerB)) {
-      if (gamePlayerA.played[0] == "S" && gamePlayerB.played[0] == "P" || gamePlayerA.played[0] == "P" && gamePlayerB.played[0] == "R" || gamePlayerA.played[0] == "R" && gamePlayerB.played[0] == "S" ) {
+      if (gamePlayerA.played[0] == "S" && gamePlayerB.played[0] == "P" || gamePlayerA.played[0] == "P" && gamePlayerB.played[0] == "R" || gamePlayerA.played[0] == "R" && gamePlayerB.played[0] == "S") {
         mapPlayerA.wins++;
         mapPlayerB.losses++;
       } else {
@@ -58,7 +58,7 @@ export const handleHistoryPage = (data: Array<GameObject>): Map<string, PlayerPr
       player.games.push(game);
       player.totalMatches = player.games.length;
       player.winRatio = player.wins / player.totalMatches;
-      
+
       let mostPicked = 0;
       let pick: keyof typeof player.pickRate;
       for (pick in player.pickRate) {
@@ -105,4 +105,4 @@ export const combinePlayerMaps = (destinationMap: Map<string, PlayerProfile>, ad
   return destinationMap;
 };
 
-export default { createPlayerProfile, handleHistoryPage, combinePlayerMaps };
+export default { createPlayerProfile, handleHistoryPage: handleMatchPage, combinePlayerMaps };

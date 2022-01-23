@@ -10,7 +10,7 @@ const FinishedGamesList = ({ finishedGames }: { finishedGames: Array<GameObject>
       <Table striped>
         <tbody>
           {finishedGames.map(game => (
-            <tr key={game.gameId}>
+            <tr key={`${game.gameId}/concludedgametr`}>
               <td>
                 <GameCard game={game} />
               </td>

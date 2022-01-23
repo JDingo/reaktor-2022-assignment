@@ -1,33 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { GameObject, isGameBegin, isGameResult, PlayerProfile, RunningGame } from './types';
-import { fetchMatchHistory } from './services/history';
-import { combinePlayerMaps, handleHistoryPage } from './services/players';
+import { fetchMatchPage } from './services/history';
+import { combinePlayerMaps, handleMatchPage } from './services/players';
+
 import PlayerList from './components/PlayerList';
 import RunningGamesList from './components/RunningGamesList';
 import SearchBar from './components/SearchBar';
 import FinishedGamesList from './components/FinishedGamesList';
 
 const App = () => {
-  const [gameList, setGameList] = useState<Array<GameObject>>([]);
   const [cursor, setCursor] = useState<string>('/rps/history');
-  const [pageNumber, setpageNumber] = useState<number>(0);
 
   const [playerMap, setPlayerMap] = useState<Map<string, PlayerProfile>>(new Map());
   const [runningGames, setRunningGames] = useState<Array<RunningGame>>([]);
-  const [finishedGames, setFinishedGames]= useState<Array<GameObject>>([]);
-  const [latestData, setLatestData] = useState<unknown>({});
+  const [finishedGames, setFinishedGames] = useState<Array<GameObject>>([]);
+  const [wsData, setWsData] = useState<unknown>({});
 
   const [search, setSearch] = useState<string>('');
 
+  const [x, setX] = useState<number>(0);
+
   useEffect(() => {
-    fetchMatchHistory(cursor).then(fetchObject => {
+    fetchMatchPage(cursor).then(fetchObject => {
       const { cursor, data } = fetchObject;
-      setGameList(gameList.concat(data));
-      setpageNumber(pageNumber + 1);
 
-      setPlayerMap(combinePlayerMaps(playerMap, handleHistoryPage(data)));
+      setPlayerMap(combinePlayerMaps(playerMap, handleMatchPage(data)));
 
-      if (cursor && pageNumber < 50) { // Capped for testing
+      playerMap.forEach((value) => {
+        const duplicateId: Array<string> = [];
+        value.games.forEach(game => {
+          if (game.gameId in duplicateId) {
+            console.log("Dup");
+            console.log(duplicateId.length, value.games.length);
+          } else {
+            duplicateId.push(game.gameId);
+          }
+        });
+      });
+
+      setX(x => x + 1);
+
+      if (cursor && x < 8) {
         setCursor(cursor);
       }
     }).catch(() => {
@@ -47,21 +60,21 @@ const App = () => {
       let parsedData = receivedData.replaceAll("\\", "");
       parsedData = parsedData.substring(1, parsedData.length - 1);
       const game: unknown = JSON.parse(parsedData);
-      setLatestData(game);
+      setWsData(game);
     };
   }, []);
 
   useEffect(() => {
-    if (isGameBegin(latestData)) {
-      setRunningGames(runningGames => [...runningGames, latestData]);
+    if (isGameBegin(wsData)) {
+      setRunningGames(runningGames => [...runningGames, wsData]);
     }
 
-    else if (isGameResult(latestData)) {
-      setRunningGames(runningGames => runningGames.filter(runningGame => runningGame.gameId !== latestData.gameId));
-      setFinishedGames(finishedGames => [...finishedGames, latestData]);
-      setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleHistoryPage([latestData])));
+    else if (isGameResult(wsData)) {
+      setRunningGames(runningGames => runningGames.filter(runningGame => runningGame.gameId !== wsData.gameId));
+      setFinishedGames(finishedGames => [...finishedGames, wsData]);
+      setPlayerMap(playerMap => combinePlayerMaps(playerMap, handleMatchPage([wsData])));
     }
-  }, [latestData]);
+  }, [wsData]);
 
   return (
     <div className='container'>

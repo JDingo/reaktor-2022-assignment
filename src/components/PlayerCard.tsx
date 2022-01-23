@@ -19,24 +19,38 @@ const PlayerCard = ({ name, playerProfile }: { name: string, playerProfile: Play
         <li> Most Picked: {playerProfile.mostPicked} </li>
       </ul>
       Games: <Button variant="primary" size="sm" onClick={handleButton}>{showGames ? 'Hide' : 'Show'}</Button>
-      <GameList games={showGames ? playerProfile.games : []} />
+      <GameList games={showGames ? playerProfile.games : []} name={name} />
     </div>
   );
 };
 
-const GameList = ({ games }: { games: Array<GameObject> }) => {
+const GameList = ({ games, name }: { games: Array<GameObject>, name: string }) => {
   if (games.length === 0) {
     return null;
   }
+
+  const [duplicateGames] = useState<Array<GameObject>>([]);
+  const [id] = useState<Array<string>>([]);
+
+  games.forEach(game => {
+    if (game.gameId in id) {
+      duplicateGames.push(game);
+    } else {
+      id.push(game.gameId);
+    }
+  });
+
+  console.log(duplicateGames);
+  console.log(games);
 
   return (
     <div className="vertical_scroll">
       <Table striped>
         <tbody>
           {games.map(game => (
-            <tr key={game.gameId}>
+            <tr key={`${game.gameId}/playergametr/${name}`}>
               <td>
-                <GameCard key={game.gameId} game={game} />
+                <GameCard key={`${game.gameId}/playergamecard`} game={game} />
               </td>
             </tr>
           ))}

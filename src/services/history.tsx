@@ -1,7 +1,7 @@
 import { FetchObject, GameObject } from "../types";
 import axios from 'axios';
 
-export const fetchMatchHistory = async (cursorUrl: string): Promise<FetchObject> => {
+export const fetchMatchPage = async (cursorUrl: string): Promise<FetchObject> => {
   const response = await axios.get<FetchObject>(cursorUrl);
 
   const cursor: string = response.data.cursor;
