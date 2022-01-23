@@ -29,17 +29,6 @@ const GameList = ({ games, name }: { games: Array<GameObject>, name: string }) =
     return null;
   }
 
-  const [duplicateGames] = useState<Array<GameObject>>([]);
-  const [id] = useState<Array<string>>([]);
-
-  games.forEach(game => {
-    if (game.gameId in id) {
-      duplicateGames.push(game);
-    } else {
-      id.push(game.gameId);
-    }
-  });
-
   return (
     <div className="vertical_scroll">
       <Table striped>
