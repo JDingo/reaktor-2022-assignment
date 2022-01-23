@@ -44,5 +44,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://bad-api-assignment.reaktor.com"
+  "proxy": "https://bad-api-assignment.reaktor.com",
+  "homepage": "https://jdingo.github.io/reaktor-2022-assignment/"
 }
