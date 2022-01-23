@@ -18,8 +18,6 @@ const App = () => {
 
   const [search, setSearch] = useState<string>('');
 
-  const [x, setX] = useState<number>(0);
-
   useEffect(() => {
     fetchMatchPage(cursor).then(fetchObject => {
       const { cursor, data } = fetchObject;
@@ -38,9 +36,7 @@ const App = () => {
         });
       });
 
-      setX(x => x + 1);
-
-      if (cursor && x < 8) {
+      if (cursor) {
         setCursor(cursor);
       }
     }).catch(() => {
