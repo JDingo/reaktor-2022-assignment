@@ -17,4 +17,4 @@ To set up development environment:
 
 ## GitHub Pages
 
-There is a small demo on this project's GitHub Page. Deployment can be found here: https://jdingo.github.io/reaktor-2022-assignment/. The page can not get data from the API but it can listen to the WebSocket.
+There is a small demo on this project's GitHub Page. Deployment can be found here: https://jdingo.github.io/reaktor-2022-assignment/. The page fetches data from the API through a proxy. Files related to the proxy can be found in the `proxy` folder.
