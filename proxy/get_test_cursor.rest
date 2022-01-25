@@ -1,0 +1,1 @@
+GET http://localhost:3001/rps/history?cursor=4C0a6kdM87GM  HTTP/1.1
